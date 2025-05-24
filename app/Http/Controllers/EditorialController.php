@@ -22,34 +22,34 @@ class EditorialController extends Controller
      */
     public function create()
     {
-   //Abre el formulario de captura de registros
-   return view('editorial.create');
-}
+        //Abre el formulario de captura de registros
+        return view('editorial.create');
+    }
 
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-//validación de campos requeridos
-$this->validate($request, [
-   'nombre' => 'required|min:5',
-   'domicilio' => 'required',
-   'correo' => 'required'
-]);
+    {
+        //validación de campos requeridos
+        $this->validate($request, [
+            'nombre' => 'required|min:5',
+            'domicilio' => 'required',
+            'correo' => 'required'
+        ]);
 
 
-$editorial = new Editorial();
-$editorial->nombre = $request->input('nombre');
-$editorial->domicilio = $request->input('domicilio');
-$editorial->correo = $request->input('correo');
-$editorial->status = 1;
-$editorial->save();
-return redirect()->route('editoriales.index')->with(array(
-   'message' => 'La Editorial se ha guardado correctamente'
-));
-}
+        $editorial = new Editorial();
+        $editorial->nombre = $request->input('nombre');
+        $editorial->domicilio = $request->input('domicilio');
+        $editorial->correo = $request->input('correo');
+        $editorial->status = 1;
+        $editorial->save();
+        return redirect()->route('editoriales.index')->with(array(
+            'message' => 'La Editorial se ha guardado correctamente'
+        ));
+    }
 
 
     /**
@@ -65,16 +65,35 @@ return redirect()->route('editoriales.index')->with(array(
      */
     public function edit(string $id)
     {
-        //
+        //Abre el formulario que permita editar un registro
+        $editorial = Editorial::findOrFail($id);
+        return view('editorial.edit', array(
+            'editorial' => $editorial
+        ));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        //
+        //Guarda la información del formulario de edición
+        $this->validate($request, [
+            'nombre' => 'required|min:5',
+            'domicilio' => 'required',
+            'correo' => 'required'
+        ]);
+        $editorial = Editorial::findOrFail($id);
+        $editorial->nombre =  $request->input('nombre');
+        $editorial->domicilio = $request->input('domicilio');
+        $editorial->correo = $request->input('correo');
+        $editorial->save();
+        return redirect()->route('editoriales.index')->with(array(
+            'message' => 'La editorial se ha actualizado correctamente'
+        ));
     }
+
 
     /**
      * Remove the specified resource from storage.
